@@ -101,6 +101,7 @@ export class TasksService {
       actionType: ActionType.TASK_DELETED,
       taskId: id,
       beforeData,
+      afterData: null,
     });
   }
 }
