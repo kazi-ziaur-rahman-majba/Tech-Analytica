@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +12,9 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto) {
+    if (!loginDto.email || !loginDto.password) {
+      throw new BadRequestException('Email and password must be provided');
+    }
     const user = await this.usersService.findByEmail(loginDto.email);
     if (!user || !user.password) {
       throw new UnauthorizedException('Invalid credentials');
