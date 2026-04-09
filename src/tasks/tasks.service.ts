@@ -35,12 +35,12 @@ export class TasksService {
     return task;
   }
 
-  async create(createTaskDto: CreateTaskDto, adminId: string): Promise<Task> {
+  async create(createTaskDto: CreateTaskDto, actorId: string): Promise<Task> {
     const task = this.tasksRepository.create(createTaskDto);
     const savedTask = await this.tasksRepository.save(task);
 
     await this.auditLogService.log({
-      actorId: adminId,
+      actorId,
       actionType: ActionType.TASK_CREATED,
       taskId: savedTask.id,
       afterData: savedTask,
@@ -49,7 +49,7 @@ export class TasksService {
     return savedTask;
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto, adminId: string): Promise<Task> {
+  async update(id: string, updateTaskDto: UpdateTaskDto, actorId: string): Promise<Task> {
     const task = await this.findOne(id);
     const beforeData = { ...task };
     
@@ -62,7 +62,7 @@ export class TasksService {
     const updatedTask = await this.tasksRepository.save(task);
 
     await this.auditLogService.log({
-      actorId: adminId,
+      actorId,
       actionType,
       taskId: updatedTask.id,
       beforeData,
@@ -90,18 +90,18 @@ export class TasksService {
     return updatedTask;
   }
 
-  async remove(id: string, adminId: string): Promise<void> {
+  async remove(id: string, actorId: string): Promise<void> {
     const task = await this.findOne(id);
     const beforeData = { ...task };
 
-    await this.tasksRepository.delete(id);
-
     await this.auditLogService.log({
-      actorId: adminId,
+      actorId,
       actionType: ActionType.TASK_DELETED,
       taskId: id,
       beforeData,
       afterData: null,
     });
+
+    await this.tasksRepository.delete(id);
   }
 }

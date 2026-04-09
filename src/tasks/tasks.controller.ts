@@ -24,13 +24,13 @@ export class TasksController {
   @Post()
   @Roles(Role.ADMIN)
   create(@Body() createTaskDto: CreateTaskDto, @Request() req) {
-    return this.tasksService.create(createTaskDto, req.user.id);
+    return this.tasksService.create(createTaskDto, req.user.sub);
   }
 
   @Patch(':id')
   @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto, @Request() req) {
-    return this.tasksService.update(id, updateTaskDto, req.user.id);
+    return this.tasksService.update(id, updateTaskDto, req.user.sub);
   }
 
   @Patch(':id/status')
@@ -42,6 +42,6 @@ export class TasksController {
   @Delete(':id')
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string, @Request() req) {
-    return this.tasksService.remove(id, req.user.id);
+    return this.tasksService.remove(id, req.user.sub);
   }
 }
