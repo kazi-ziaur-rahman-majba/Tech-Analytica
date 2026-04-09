@@ -72,7 +72,7 @@ export class TasksService {
     return updatedTask;
   }
 
-  async updateStatus(id: string, updateStatusDto: UpdateStatusDto, userId: string): Promise<Task> {
+  async updateStatus(id: string, updateStatusDto: UpdateStatusDto, actorId: string): Promise<Task> {
     const task = await this.findOne(id);
     const beforeData = { status: task.status };
 
@@ -80,7 +80,7 @@ export class TasksService {
     const updatedTask = await this.tasksRepository.save(task);
 
     await this.auditLogService.log({
-      actorId: userId,
+      actorId,
       actionType: ActionType.STATUS_CHANGED,
       taskId: updatedTask.id,
       beforeData,

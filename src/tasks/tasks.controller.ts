@@ -36,7 +36,7 @@ export class TasksController {
   @Patch(':id/status')
   @Roles(Role.USER) // Only user can update status per prompt
   updateStatus(@Param('id') id: string, @Body() updateStatusDto: UpdateStatusDto, @Request() req) {
-    return this.tasksService.updateStatus(id, updateStatusDto, req.user.id);
+    return this.tasksService.updateStatus(id, updateStatusDto, req.user.sub);
   }
 
   @Delete(':id')
